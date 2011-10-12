@@ -6,11 +6,14 @@ import Helpers._
 
 import common._
 import http._
+import provider.HTTPRequest
 import sitemap._
 import Loc._
 import mapper._
 
 import code.model._
+import code.lib._
+import java.util.Locale
 
 
 /**
@@ -43,6 +46,12 @@ class Boot {
     def sitemap = SiteMap(
       Menu.i("Home") / "index" >> User.AddUserMenusAfter, // the simple way to declare a menu
 
+      Menu.i("Items") / "items",
+
+      Menu.i("Post") / "post" >> isAdmin,
+
+      Menu.i("View") / "view" >> Stateless,
+
       // more complex because this menu allows anything in the
       // /static path to be visible
       Menu(Loc("Static", Link(List("static"), true, "/static/index"), 
@@ -65,8 +74,15 @@ class Boot {
     LiftRules.ajaxEnd =
       Full(() => LiftRules.jsArtifacts.hide("ajax-loader").cmd)
 
+    val oldCalc = LiftRules.localeCalculator
+
+    LiftRules.localeCalculator = req => {
+      val loc: Box[Locale] = User.currentUser.map(_.locale.isAsLocale)
+      loc openOr oldCalc(req)
+    }
+
     // Force the request to be UTF-8
-    LiftRules.early.append(_.setCharacterEncoding("UTF-8"))
+    LiftRules.early.append(request => request.setCharacterEncoding("UTF-8"))
 
     // What is the function to test if a user is logged in?
     LiftRules.loggedInTest = Full(() => User.loggedIn_?)
@@ -77,5 +93,31 @@ class Boot {
 
     // Make a transaction span the whole HTTP request
     S.addAround(DB.buildLoanWrapper)
+    S.addAround(new MyWrapper)
+
+    LiftRules.dispatch.append(API)
+    LiftRules.statelessDispatchTable.append(StatelessContentThing)
+  }
+
+  val isAdmin = If(() => User.loggedIn_? /*&& User.superUser_?*/, "Must be super user")
+}
+
+class MyWrapper extends LoanWrapper {
+  def apply[T](f: => T): T = {
+    setupDBConnection()
+    try {
+      f
+    } finally {
+      releaseDBConnection()
+    }
+  }
+
+  def setupDBConnection() {
+
+  }
+
+  def releaseDBConnection() {
+
   }
 }
+

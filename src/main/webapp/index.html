@@ -1,18 +1,54 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
     <title>Home</title>
-  </head>
-  <body class="lift:content_id=main">
-    <div id="main" class="lift:surround?with=default;at=content">
-      <h2>Welcome to your project!</h2>
-      <p>
-	<span class="lift:helloWorld.howdy">
+</head>
+<body class="lift:content_id=main">
+<div>
+    not shown
+</div>
+
+<div id="main" class="lift:surround?with=default;at=content">
+    <h2>Welcome to your project!</h2>
+    <!--
+    jQuery.ajax({ url : liftAjax.addPageName("/ajax_request/"), data : data, type : "POST", dataType : "script", timeout : 5000, cache : false, success : liftAjax.lift_successRegisterGC, error : liftAjax.lift_failRegisterGC });
+
+    -->
+   
+	<span lift="hello_world.howdy" class="foo bar baz">
 	  Welcome to your Lift app at <span id="time">Time goes here</span>
 	</span>
-      </p>
+
+        <div class="lift:HelloWorld.show">
+    <table>
+        <tr><th>Name</th><th>Age</th></tr>
+        <tr name="frog" class="weasel"><td name="name">Foo</td><td name="age">5</td></tr>
+    </table>
+        </div>
+
+<span lift="hello_world.howdy" class="foo bar baz">
+	  sdklfjsdkljfdskljfklsdjfkldsjf
+    <div><span id="time">Time goes here</span></div>
+	</span>
+
+
+    <span class="lift:Baz?parallel=true">Foo goes here</span>
+
+    <div id="sloth" class="lift:Ajaxy">
+        The current value of Foo is <span name="Foo">??</span>
+        <button name="add">Increment</button>
+        <button name="reset">Reset</button>
     </div>
-  </body>
+
+
+    <span lift="hello_world.howdy" class="foo bar baz">
+	  sdklfjsdkljfdskljfklsdjfkldsjf
+    <div><span id="time">Time goes here</span></div>
+	</span>
+
+
+</div>
+</body>
 </html>
 
